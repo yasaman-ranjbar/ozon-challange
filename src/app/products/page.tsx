@@ -2,21 +2,35 @@
 
 import { useProducts } from "@/hooks/useProducts";
 import { ProductList } from "@/components/products/ProductList";
-import { ChangeEvent, useState, useMemo } from "react";
+import { ChangeEvent, useState, useMemo, useEffect } from "react";
 import TextField from "@/components/ui/TextField";
 import SelectBox from "@/components/ui/SelectBox";
+import { useQueryParams } from "@/hooks/useQueryParams";
 
 export default function Home() {
   const { products, loading, error } = useProducts();
   const [searchValue, setSearchValue] = useState("");
   const [categoryValue, setCategory] = useState("");
+  const { setQueryParam, getQueryParam } = useQueryParams();
+
+  // Initialize values from URL parameters on component mount
+  useEffect(() => {
+    const searchParam = getQueryParam('search') || '';
+    const categoryParam = getQueryParam('category') || '';
+    setSearchValue(searchParam);
+    setCategory(categoryParam);
+  }, [getQueryParam]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    const value = e.target.value;
+    setSearchValue(value);
+    setQueryParam("search", value);
   };
 
   const handleCategoryFilter = (e: string) => {
-    setCategory(e as string);
+    const value = e === 'all categories' ? '' : e;
+    setCategory(value);
+    setQueryParam("category", value);
   };
 
   const filteredProducts = useMemo(() => {
