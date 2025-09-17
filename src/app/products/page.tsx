@@ -91,14 +91,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8 space-y-6">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 text-center">
-            Product Store
-          </h1>
-        </header>
-
+    <div className="space-y-8">
         <div className="grid grid-cols-3 gap-4">
           <TextField
             placeholder="search"
@@ -120,7 +113,6 @@ export default function Home() {
         </div>
 
         <ProductList products={filteredProducts} loading={loading} />
-      </div>
-    </main>
+    </div>
   );
 }

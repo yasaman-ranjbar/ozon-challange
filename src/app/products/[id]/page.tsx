@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import { useProduct } from '@/hooks/useProduct';
-import SkeletonLoading from '@/components/product/SkeletonLoading';
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useProduct } from "@/hooks/useProduct";
+import SkeletonLoading from "@/components/product/SkeletonLoading";
+import { AppRoutes } from "@/constant/routes";
+import Button from "@/components/ui/Button";
 
 export default function ProductDetail() {
   const params = useParams();
@@ -12,9 +14,7 @@ export default function ProductDetail() {
   const { product, loading, error } = useProduct(params.id as string);
 
   if (loading) {
-    return (
-      <SkeletonLoading />
-    );
+    return <SkeletonLoading />;
   }
 
   if (error || !product) {
@@ -22,9 +22,9 @@ export default function ProductDetail() {
       <main className="min-h-screen bg-gray-100 flex justify-center items-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-          <p className="text-gray-600 mb-4">{error || 'Product not found'}</p>
+          <p className="text-gray-600 mb-4">{error || "Product not found"}</p>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
           >
             Back to Products
@@ -37,13 +37,14 @@ export default function ProductDetail() {
   return (
     <main className="min-h-screen bg-gray-100">
       <div className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => router.push('/')}
+        <Button
+          variant="success"
+          onClick={() => router.push(AppRoutes.PRODUCTS)}
           className="flex items-center text-blue-600 hover:text-blue-800 mb-8 transition-colors"
         >
           <span className="mr-2">←</span>
           Back to Products
-        </button>
+        </Button>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid md:grid-cols-2 gap-8 p-8">

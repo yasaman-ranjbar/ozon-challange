@@ -11,11 +11,11 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 text-center">
-          Ozon Challenge - Product Store
-        </h1>
+        <h2 className="text-2xl font-bold text-gray-900 text-center">
+          Ozon Challenge
+        </h2>
         <p className="text-gray-600 text-center mt-2">
           Click on any product to view details
         </p>
@@ -23,6 +23,6 @@ export default function Home() {
       <Button onClick={handleClick} variant="primary" size="lg">
         products List
       </Button>
-    </main>
+    </div>
   );
 }
