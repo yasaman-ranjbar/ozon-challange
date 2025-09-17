@@ -6,17 +6,19 @@ import { ChangeEvent, useState, useMemo, useEffect } from "react";
 import TextField from "@/components/ui/TextField";
 import SelectBox from "@/components/ui/SelectBox";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { sortData } from "@/constant/sortData";
 
 export default function Home() {
   const { products, loading, error } = useProducts();
   const [searchValue, setSearchValue] = useState("");
   const [categoryValue, setCategory] = useState("");
+  const [sortValue, setSortValue] = useState("");
   const { setQueryParam, getQueryParam } = useQueryParams();
 
   // Initialize values from URL parameters on component mount
   useEffect(() => {
-    const searchParam = getQueryParam('search') || '';
-    const categoryParam = getQueryParam('category') || '';
+    const searchParam = getQueryParam("search") || "";
+    const categoryParam = getQueryParam("category") || "";
     setSearchValue(searchParam);
     setCategory(categoryParam);
   }, [getQueryParam]);
@@ -28,9 +30,16 @@ export default function Home() {
   };
 
   const handleCategoryFilter = (e: string) => {
-    const value = e === 'all categories' ? '' : e;
+    const value = e === "all categories" ? "" : e;
     setCategory(value);
     setQueryParam("category", value);
+  };
+
+  const handleSort = (e: string) => {
+    const value = e === "sort" ? "" : e;
+    console.log(value);
+    setSortValue(value);
+    setQueryParam("sort", value);
   };
 
   const filteredProducts = useMemo(() => {
@@ -50,8 +59,20 @@ export default function Home() {
       );
     }
 
+    // Sort by price
+    if(sortValue && sortValue !== "sort") {
+      filtered = filtered.sort((a, b) => {
+        if (sortValue === "Ascending") {
+          return a.price - b.price;
+        } else if (sortValue === "Descending") {
+          return b.price - a.price;
+        }
+        return 0;
+      });
+    }
+
     return filtered;
-  }, [products, searchValue, categoryValue]);
+  }, [products, searchValue, categoryValue , sortValue]);
 
   const categories = [
     "all categories",
@@ -78,7 +99,7 @@ export default function Home() {
           </h1>
         </header>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <TextField
             placeholder="search"
             value={searchValue}
@@ -89,6 +110,12 @@ export default function Home() {
             options={categories}
             value={categoryValue}
             onChange={(e) => handleCategoryFilter(e as string)}
+          />
+          <SelectBox
+            defaultValue="sort"
+            options={sortData}
+            value={sortValue}
+            onChange={(e) => handleSort(e as string)}
           />
         </div>
 
