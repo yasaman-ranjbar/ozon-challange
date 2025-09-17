@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((
   {
     children,
     variant = "primary",
