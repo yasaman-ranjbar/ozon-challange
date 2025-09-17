@@ -4,24 +4,45 @@ import { useProducts } from "@/hooks/useProducts";
 import { ProductList } from "@/components/products/ProductList";
 import { ChangeEvent, useState, useMemo } from "react";
 import TextField from "@/components/ui/TextField";
+import SelectBox from "@/components/ui/SelectBox";
 
 export default function Home() {
   const { products, loading, error } = useProducts();
   const [searchValue, setSearchValue] = useState("");
+  const [categoryValue, setCategory] = useState("");
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
 
+  const handleCategoryFilter = (e: string) => {
+    setCategory(e as string);
+  };
+
   const filteredProducts = useMemo(() => {
-    if (!searchValue.trim()) {
-      return products;
+    let filtered = [...products];
+
+    // Filter by search value
+    if (searchValue.trim()) {
+      filtered = filtered.filter((product) =>
+        product.title.toLowerCase().includes(searchValue.toLowerCase())
+      );
     }
-    
-    return products.filter((product) => 
-      product.title.toLowerCase().includes(searchValue.toLowerCase()) 
-    );
-  }, [products, searchValue]);
+
+    // Filter by category
+    if (categoryValue && categoryValue !== "all categories") {
+      filtered = filtered.filter(
+        (product) => product.category === categoryValue
+      );
+    }
+
+    return filtered;
+  }, [products, searchValue, categoryValue]);
+
+  const categories = [
+    "all categories",
+    ...Array.from(new Set(products.map((item) => item.category))),
+  ];
 
   if (error) {
     return (
@@ -43,8 +64,18 @@ export default function Home() {
           </h1>
         </header>
 
-        <div className="">
-          <TextField placeholder="search" value={searchValue} onChange={handleSearch}  />
+        <div className="grid grid-cols-2 gap-4">
+          <TextField
+            placeholder="search"
+            value={searchValue}
+            onChange={handleSearch}
+          />
+          <SelectBox
+            defaultValue="all categories"
+            options={categories}
+            value={categoryValue}
+            onChange={(e) => handleCategoryFilter(e as string)}
+          />
         </div>
 
         <ProductList products={filteredProducts} loading={loading} />
@@ -52,4 +83,3 @@ export default function Home() {
     </main>
   );
 }
-
