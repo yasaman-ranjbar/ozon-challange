@@ -2,7 +2,7 @@
 
 import { useProducts } from "@/hooks/useProducts";
 import { ProductList } from "@/components/products/ProductList";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useMemo } from "react";
 import TextField from "@/components/ui/TextField";
 import SelectBox from "@/components/ui/SelectBox";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -24,8 +24,8 @@ export default function Home() {
     setSortValue,
   } = useFilterStore();
 
-    // Get filtered products
-    const filteredProducts = useFilterProducts(products);
+  // Get filtered products
+  const filteredProducts = useFilterProducts(products);
 
   // Initialize values from URL parameters on component mount
   useEffect(() => {
@@ -36,6 +36,14 @@ export default function Home() {
     setCategoryValue(categoryParam);
     setSortValue(sortParam);
   }, [getQueryParam]);
+
+  // show avarage filter price
+  const avarageFilterPrice = useMemo(() => {
+    return (
+      filteredProducts.reduce((acc, product) => acc + product.price, 0) /
+      filteredProducts.length
+    );
+  }, [filteredProducts]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -74,6 +82,11 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
+      {filteredProducts.length < products.length && (
+          <h2 className="flex justify-center text-xl bg-orange-100 p-4 rounded-md">
+            Avarage Filter Price: {avarageFilterPrice.toFixed(2)}
+          </h2>
+        )}
       <div className="grid grid-cols-3 gap-4">
         <TextField
           placeholder="search"
