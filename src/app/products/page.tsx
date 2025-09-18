@@ -82,11 +82,11 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      {filteredProducts.length < products.length && (
-          <h2 className="flex justify-center text-xl bg-orange-100 p-4 rounded-md">
-            Avarage Filter Price: {avarageFilterPrice.toFixed(2)}
-          </h2>
-        )}
+      {filteredProducts.length > 0 && (
+        <h2 className="flex justify-center text-xl bg-orange-100 p-4 rounded-md">
+          Average Filter Price: {avarageFilterPrice.toFixed(2)}
+        </h2>
+      )}
       <div className="grid grid-cols-3 gap-4">
         <TextField
           placeholder="search"
