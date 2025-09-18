@@ -1,4 +1,4 @@
-# Ozone Mini Product Dashboard
+# Ozone Mini Product Store
 
 This project was built as part of the **Frontend Developer** interview assignment.  
 It is implemented using **Next.js (App Router)**, **TypeScript**, **TailwindCSS**, and **Zustand**.
@@ -6,6 +6,7 @@ It is implemented using **Next.js (App Router)**, **TypeScript**, **TailwindCSS*
 ---
 
 ## 🚀 Features
+
 - Fetch and display products from [Fake Store API](https://fakestoreapi.com)
 - Show product name, price, category, and rating
 - Search products by name
@@ -15,13 +16,14 @@ It is implemented using **Next.js (App Router)**, **TypeScript**, **TailwindCSS*
 - Product detail page (`/products/[id]`)
 - Clean project structure with TypeScript everywhere
 - State management with **Zustand**
-- One **custom hook** for fetching and filtering products
+- fore **custom hook** for fetching and filtering products
 
 ---
 
 ## 📦 Installation
 
 Clone the repository:
+
 ```bash
 git clone https://github.com/yasaman-ranjbar/ozon-challange
 cd ozon-challange
@@ -35,12 +37,16 @@ npm run dev
 
 src/
 ├─ app/
-│  ├─ page.tsx           # Dashboard
-│  ├─ products/[id]/     # Product detail page
-│  └─ layout.tsx         # Root layout
-├─ components/           # UI components
+│  ├─ page.tsx           # Home page
+│  ├─ products/[id]/     # Product page and product detail page
+│  └─ layout.tsx
+├─ components/
+│  ├─ ui                 # UI common components
+│  ├─ products           # Products ui components
+│  └─ product            # single product component
 ├─ hooks/                # Custom hooks
-├─ stores/               # Zustand store
-├─ lib/                  # API endpoints + axios instance
 ├─ types/                # TypeScript types
-└─ utils/                # Utility functions
+└─ services/                # api services
+└─ store/                # state managment
+└─ constants/                # static data
+```
