@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export interface FilterState{
+    // state
     searchValue: string;
     categoryValue: string;
     sortValue: string;
