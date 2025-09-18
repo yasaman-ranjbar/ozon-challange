@@ -2,25 +2,39 @@
 
 import { useProducts } from "@/hooks/useProducts";
 import { ProductList } from "@/components/products/ProductList";
-import { ChangeEvent, useState, useMemo, useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 import TextField from "@/components/ui/TextField";
 import SelectBox from "@/components/ui/SelectBox";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { sortData } from "@/constant/sortData";
+import { useFilterStore } from "@/store/filterStore";
+import useFilterProducts from "@/hooks/useFilterProducts";
 
 export default function Home() {
   const { products, loading, error } = useProducts();
-  const [searchValue, setSearchValue] = useState("");
-  const [categoryValue, setCategory] = useState("");
-  const [sortValue, setSortValue] = useState("");
   const { setQueryParam, getQueryParam } = useQueryParams();
+
+  // get data from store
+  const {
+    searchValue,
+    categoryValue,
+    sortValue,
+    setSearchValue,
+    setCategoryValue,
+    setSortValue,
+  } = useFilterStore();
+
+    // Get filtered products
+    const filteredProducts = useFilterProducts(products);
 
   // Initialize values from URL parameters on component mount
   useEffect(() => {
     const searchParam = getQueryParam("search") || "";
     const categoryParam = getQueryParam("category") || "";
+    const sortParam = getQueryParam("sort") || "";
     setSearchValue(searchParam);
-    setCategory(categoryParam);
+    setCategoryValue(categoryParam);
+    setSortValue(sortParam);
   }, [getQueryParam]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +45,7 @@ export default function Home() {
 
   const handleCategoryFilter = (e: string) => {
     const value = e === "all categories" ? "" : e;
-    setCategory(value);
+    setCategoryValue(value);
     setQueryParam("category", value);
   };
 
@@ -41,38 +55,6 @@ export default function Home() {
     setSortValue(value);
     setQueryParam("sort", value);
   };
-
-  const filteredProducts = useMemo(() => {
-    let filtered = [...products];
-
-    // Filter by search value
-    if (searchValue.trim()) {
-      filtered = filtered.filter((product) =>
-        product.title.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
-
-    // Filter by category
-    if (categoryValue && categoryValue !== "all categories") {
-      filtered = filtered.filter(
-        (product) => product.category === categoryValue
-      );
-    }
-
-    // Sort by price
-    if(sortValue && sortValue !== "sort") {
-      filtered = filtered.sort((a, b) => {
-        if (sortValue === "Ascending") {
-          return a.price - b.price;
-        } else if (sortValue === "Descending") {
-          return b.price - a.price;
-        }
-        return 0;
-      });
-    }
-
-    return filtered;
-  }, [products, searchValue, categoryValue , sortValue]);
 
   const categories = [
     "all categories",
@@ -92,27 +74,27 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-        <div className="grid grid-cols-3 gap-4">
-          <TextField
-            placeholder="search"
-            value={searchValue}
-            onChange={handleSearch}
-          />
-          <SelectBox
-            defaultValue="all categories"
-            options={categories}
-            value={categoryValue}
-            onChange={(e) => handleCategoryFilter(e as string)}
-          />
-          <SelectBox
-            defaultValue="sort"
-            options={sortData}
-            value={sortValue}
-            onChange={(e) => handleSort(e as string)}
-          />
-        </div>
+      <div className="grid grid-cols-3 gap-4">
+        <TextField
+          placeholder="search"
+          value={searchValue}
+          onChange={handleSearch}
+        />
+        <SelectBox
+          defaultValue="all categories"
+          options={categories}
+          value={categoryValue}
+          onChange={(e) => handleCategoryFilter(e as string)}
+        />
+        <SelectBox
+          defaultValue="sort"
+          options={sortData}
+          value={sortValue}
+          onChange={(e) => handleSort(e as string)}
+        />
+      </div>
 
-        <ProductList products={filteredProducts} loading={loading} />
+      <ProductList products={filteredProducts} loading={loading} />
     </div>
   );
 }
